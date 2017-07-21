@@ -1,10 +1,7 @@
 package com.emusicstore.dao.impl;
 
 import com.emusicstore.dao.CustomerDao;
-import com.emusicstore.model.Authorities;
-import com.emusicstore.model.Cart;
-import com.emusicstore.model.Customer;
-import com.emusicstore.model.User;
+import com.emusicstore.model.*;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -47,6 +46,12 @@ public class CustomerDaoImpl implements CustomerDao{
         newAuthorities.setUsername(customer.getUsername());
         newAuthorities.setAuthority("ROLE_USER");
 
+        Role newRole = new Role();
+        newRole.setName(newAuthorities.getAuthority());
+        newRole.setUsers(Arrays.asList(newUser));
+        newUser.setRoles(Arrays.asList(newRole));
+
+        session.saveOrUpdate(newRole);
         session.saveOrUpdate(newUser);
         session.saveOrUpdate(newAuthorities);
 
