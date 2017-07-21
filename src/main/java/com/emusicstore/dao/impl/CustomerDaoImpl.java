@@ -9,6 +9,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ public class CustomerDaoImpl implements CustomerDao{
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     public void addCustomer(Customer customer){
         Session session = sessionFactory.getCurrentSession();
@@ -33,8 +37,9 @@ public class CustomerDaoImpl implements CustomerDao{
 
         User newUser = new User();
         newUser.setUsername(customer.getUsername());
-        newUser.setPassword(customer.getPassword());
+        newUser.setPassword(encoder.encode(customer.getPassword()));
         newUser.setEnabled(true);
+
         newUser.setEmail(customer.getCustomerEmail());
         newUser.setCustomerId(customer.getCutomerId());
 

@@ -53,6 +53,7 @@
 
     <security:authentication-manager>
         <security:authentication-provider>
+            <security:password-encoder ref="encoder" />
             <security:jdbc-user-service
                     data-source-ref="dataSource"
                     authorities-by-username-query="SELECT username, authority FROM authorities WHERE username = ?"
@@ -74,4 +75,7 @@
         <property name="flowExecutor" ref="flowExecutor" />
     </bean>
 
+    <bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <constructor-arg name="strength" value="11" />
+    </bean>
 </beans>
