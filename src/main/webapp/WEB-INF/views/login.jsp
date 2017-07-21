@@ -24,6 +24,11 @@
                     <label for="password">Passwrod:</label>
                     <input type="password" id="password" name="password" class="form-control" />
                 </div>
+                <div class="input-group input-sm">
+                    <div class="checkbox">
+                        <label><input type="checkbox" id="rememberme" name="remember-me"> Remember Me</label>
+                    </div>
+                </div>
                 <input type="submit" value="Submit" class="btn btn-default">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
             </form>

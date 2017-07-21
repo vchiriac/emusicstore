@@ -4,7 +4,7 @@ import com.emusicstore.dao.CustomerDao;
 import com.emusicstore.model.Authorities;
 import com.emusicstore.model.Cart;
 import com.emusicstore.model.Customer;
-import com.emusicstore.model.Users;
+import com.emusicstore.model.User;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,10 +31,11 @@ public class CustomerDaoImpl implements CustomerDao{
         session.saveOrUpdate(customer.getBillingAddress());
         session.saveOrUpdate(customer.getShippingAddress());
 
-        Users newUser = new Users();
+        User newUser = new User();
         newUser.setUsername(customer.getUsername());
         newUser.setPassword(customer.getPassword());
         newUser.setEnabled(true);
+        newUser.setEmail(customer.getCustomerEmail());
         newUser.setCustomerId(customer.getCutomerId());
 
         Authorities newAuthorities = new Authorities();

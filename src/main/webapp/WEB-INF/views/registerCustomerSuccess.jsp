@@ -12,7 +12,7 @@
         </section>
 
         <section class="container">
-            <p><a href="<spring:url value="/product/productList" />" class="btn btn-default">Products</a></p>
+            <p><a href="<spring:url value="/product/productList/all" />" class="btn btn-default">Products</a></p>
         </section>
 
 <%@ include file="/WEB-INF/views/template/footer.jsp" %>
