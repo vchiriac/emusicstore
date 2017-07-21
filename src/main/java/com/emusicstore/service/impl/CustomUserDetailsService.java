@@ -16,23 +16,22 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
-/*
+
     @Autowired
     private UserService userService;
-*/
+
 
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String name)
             throws UsernameNotFoundException {
-/*        User user = userService.findBySSO(name);
+        User user = userService.findByName(name);
         logger.info("User : {}", user);
         if (user == null) {
             logger.info("User not found");
             throw new UsernameNotFoundException("Username not found");
         }
+        return new AuthenticatedUser(user);
 
-        return new AuthenticatedUser(user);*/
-        return null;
     }
 
 }
