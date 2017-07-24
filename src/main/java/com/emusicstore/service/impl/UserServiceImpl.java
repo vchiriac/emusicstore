@@ -2,6 +2,7 @@ package com.emusicstore.service.impl;
 
 import com.emusicstore.dao.UserDao;
 import com.emusicstore.model.User;
+import com.emusicstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

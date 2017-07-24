@@ -3,25 +3,41 @@ package com.emusicstore.model;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import java.util.List;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * Created by user on 7/21/17.
- */
+
 @Entity
 @Table(name = "roles")
-public class Role {
+@NamedQuery(
+        name = "Role.findByName",
+        query = "SELECT r FROM Role r WHERE r.name = :name")
+public class Role implements Serializable {
+
+    private static final long serialVersionUID = 8219597172758528893L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
     @Column(nullable = false, unique = true)
     @NotEmpty
     private String name;
+
     @Column(length = 1024)
     private String description;
 
     @ManyToMany(mappedBy = "roles")
-    private List<User> users;
+    private Set<User> users = new HashSet<>();
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
 
     public Integer getId() {
         return id;
@@ -47,12 +63,5 @@ public class Role {
         this.description = description;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 
 }

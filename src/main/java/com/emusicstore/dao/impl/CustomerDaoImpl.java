@@ -1,7 +1,9 @@
 package com.emusicstore.dao.impl;
 
 import com.emusicstore.dao.CustomerDao;
+import com.emusicstore.dao.RoleDao;
 import com.emusicstore.model.*;
+import com.emusicstore.service.RoleService;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,7 +18,10 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class CustomerDaoImpl implements CustomerDao{
+public class CustomerDaoImpl implements CustomerDao {
+
+    private static final String ROLE_USER = "ROLE_USER";
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -24,7 +29,10 @@ public class CustomerDaoImpl implements CustomerDao{
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    public void addCustomer(Customer customer){
+    @Autowired
+    private RoleDao roleDao;
+
+    public void addCustomer(Customer customer) {
         Session session = sessionFactory.getCurrentSession();
 
         customer.getBillingAddress().setCustomer(customer);
@@ -44,14 +52,13 @@ public class CustomerDaoImpl implements CustomerDao{
 
         Authorities newAuthorities = new Authorities();
         newAuthorities.setUsername(customer.getUsername());
-        newAuthorities.setAuthority("ROLE_USER");
+        newAuthorities.setAuthority(ROLE_USER);
 
-        Role newRole = new Role();
-        newRole.setName(newAuthorities.getAuthority());
-        newRole.setUsers(Arrays.asList(newUser));
-        newUser.setRoles(Arrays.asList(newRole));
+        Role newRole = roleDao.findByName(ROLE_USER); //new Role();
 
-        session.saveOrUpdate(newRole);
+        newRole.getUsers().add(newUser);
+        newUser.getRoles().add(newRole);
+
         session.saveOrUpdate(newUser);
         session.saveOrUpdate(newAuthorities);
 
@@ -65,12 +72,12 @@ public class CustomerDaoImpl implements CustomerDao{
         session.flush();
     }
 
-    public Customer getCustomerById(int customerId){
+    public Customer getCustomerById(int customerId) {
         Session session = sessionFactory.getCurrentSession();
         return (Customer) session.get(Customer.class, customerId);
     }
 
-    public List<Customer> getAllCustomers(){
+    public List<Customer> getAllCustomers() {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Customer");
         List<Customer> customerList = query.list();
@@ -79,7 +86,7 @@ public class CustomerDaoImpl implements CustomerDao{
 
     }
 
-    public Customer getCustomerByUsername(String username){
+    public Customer getCustomerByUsername(String username) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Customer where username = ?");
         query.setString(0, username);

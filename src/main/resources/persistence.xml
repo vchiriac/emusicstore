@@ -1,0 +1,21 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+
+    <persistence-unit name="emusicstore-unit">
+        <jta-data-source>emusicstore</jta-data-source>
+        <non-jta-data-source>emusicstoreUnmanaged</non-jta-data-source>
+        <class>com.emusicstore.model.User</class>
+        <class>com.emusicstore.model.Role</class>
+        <class>com.emusicstore.model.Authorities</class>
+        <class>com.emusicstore.model.Cart</class>
+        <class>com.emusicstore.model.CartItem</class>
+        <class>com.emusicstore.model.Customer</class>
+        <class>com.emusicstore.model.CustomerOrder</class>
+        <class>com.emusicstore.model.BillingAddress</class>
+        <class>com.emusicstore.model.Product</class>
+        <class>com.emusicstore.model.ShippingAddress</class>
+        <class>com.emusicstore.model.PersistentLogin</class>
+        <properties>
+            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
+        </properties>
+    </persistence-unit>
+</persistence>

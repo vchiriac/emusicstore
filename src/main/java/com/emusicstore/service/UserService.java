@@ -1,4 +1,4 @@
-package com.emusicstore.service.impl;
+package com.emusicstore.service;
 
 import com.emusicstore.model.User;
 

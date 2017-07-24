@@ -15,7 +15,7 @@
                     <img class="first-slide home-image" src="<c:url value="/resources/images/back1.jpg" />" alt="First slide">
                     <div class="container">
                         <div class="carousel-caption">
-                            <h1>Welcome to Le's Music Store</h1>
+                            <h1>Welcome to My Store</h1>
                             <p>Here you can browse and buy Instruments. Records and music related Accessories. Order How for Your Amazing New Kit!</p>
                         </div>
                     </div>

@@ -2,6 +2,7 @@ package com.emusicstore.service.impl;
 
 import com.emusicstore.auth.AuthenticatedUser;
 import com.emusicstore.model.User;
+import com.emusicstore.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,49 +5,55 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
-    @Id @GeneratedValue(strategy= GenerationType.AUTO)
+    private static final long serialVersionUID = -1199022731094089714L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     @NotEmpty()
     private String username;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     @NotEmpty
-    @Size(min=4)
+    @Size(min = 4)
     private String password;
 
     private String passwordResetToken;
 
     @NotEmpty
-    @Email(message="{errors.invalid_email}")
+    @Email(message = "{errors.invalid_email}")
     private String email;
 
     private Boolean enabled;
 
     private int customerId;
 
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
+    private Set<Role> roles = new HashSet<>();
 
-    public List<Role> getRoles() {
+
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
-    @ManyToMany(cascade=CascadeType.MERGE)
-    @JoinTable(
-            name="user_role",
-            joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
-            inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ID")})
-    private List<Role> roles;
 
     public int getId() {
         return id;
@@ -88,20 +94,20 @@ public class User {
     public void setCustomerId(int customerId) {
         this.customerId = customerId;
     }
-    public String getEmail()
-    {
+
+    public String getEmail() {
         return email;
     }
-    public void setEmail(String email)
-    {
+
+    public void setEmail(String email) {
         this.email = email;
     }
-    public String getPasswordResetToken()
-    {
+
+    public String getPasswordResetToken() {
         return passwordResetToken;
     }
-    public void setPasswordResetToken(String passwordResetToken)
-    {
+
+    public void setPasswordResetToken(String passwordResetToken) {
         this.passwordResetToken = passwordResetToken;
     }
 
