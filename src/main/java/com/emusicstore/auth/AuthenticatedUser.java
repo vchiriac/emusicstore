@@ -16,7 +16,7 @@ public class AuthenticatedUser extends org.springframework.security.core.userdet
     private User user;
 
     public AuthenticatedUser(User user) {
-        super(user.getEmail(), user.getPassword(), getAuthorities(user));
+        super(user.getUsername(), user.getPassword(), getAuthorities(user));
         this.user = user;
     }
 
@@ -30,7 +30,7 @@ public class AuthenticatedUser extends org.springframework.security.core.userdet
 
         for (Role role : roles) {
             logger.info("Role : {}", role);
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
         logger.info("authorities : {}", authorities);
         return authorities;

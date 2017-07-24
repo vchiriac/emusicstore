@@ -24,12 +24,13 @@
                     <p><strong>Category</strong>: ${product.productCategory}</p>
                     <p><strong>Condition</strong>: ${product.productCondition}</p>
                     <p>${product.productPrice} USD</p>
+                    <p>${pageContext.request.isUserInRole('ROLE_ADMIN')} User is ADMIN</p>
 
                     <br/>
 
-                    <c:set var = "role" scope="page" value="${param.role}" />
+                    <c:set var = "role" scope="page" value="${param.get('role')}" />
                     <c:set var = "url" scope="page" value="/product/productList" />
-                    <c:if test="${role='admin'}">
+                    <c:if test="${pageContext.request.isUserInRole('ROLE_ADMIN')}">
                         <c:set var="url" scope="page" value="/admin/productInventory" />
                     </c:if>
 

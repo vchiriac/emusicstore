@@ -12,18 +12,17 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 
-
     <tx:annotation-driven transaction-manager="transactionManager"/>
     <!-- This produces a container-managed EntityManagerFactory;
       rather than application-managed EntityManagerFactory as in case of LocalEntityManagerFactoryBean-->
     <bean id="entityManagerFactoryBean" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
         <!-- This makes /META-INF/persistence.xml is no longer necessary -->
-        <property name="packagesToScan" value="com.emusicstore.model" />
+        <property name="packagesToScan" value="com.emusicstore.model"/>
         <!-- JpaVendorAdapter implementation for Hibernate EntityManager.
              Exposes Hibernate's persistence provider and EntityManager extension interface -->
         <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
         <property name="jpaProperties">
             <props>
@@ -35,53 +34,65 @@
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactoryBean" />
+        <property name="entityManagerFactory" ref="entityManagerFactoryBean"/>
     </bean>
 
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="10240000" />
+        <property name="maxUploadSize" value="10240000"/>
     </bean>
 
-    <security:http auto-config="true">
-        <security:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
-        <security:intercept-url pattern="/customer/**" access="ROLE_USER" />
+    <security:http auto-config="true" access-denied-page="/Access_Denied">
+        <security:intercept-url pattern="/admin/**" access="ROLE_ADMIN"/>
+        <security:intercept-url pattern="/customer/**" access="ROLE_USER"/>
         <security:form-login
-            login-page="/login"
-            default-target-url="/product/productList/all"
-            authentication-failure-url="/login?error"
-            username-parameter="username"
-            password-parameter="password" />
-        <security:logout logout-success-url="/login?logout" delete-cookies="JSESSIONID" />
+                login-page="/login"
+                default-target-url="/home"
+                authentication-failure-url="/login?error"
+                username-parameter="username"
+                password-parameter="password"/>
+        <security:logout logout-success-url="/login?logout" delete-cookies="JSESSIONID"/>
 
         <security:remember-me key="remember-me" services-ref="rememberMeServices"/>
     </security:http>
 
     <security:authentication-manager>
-        <security:authentication-provider>
-            <security:password-encoder ref="encoder" />
-            <security:jdbc-user-service
-                    data-source-ref="dataSource"
-                    authorities-by-username-query="SELECT username, authority FROM authorities WHERE username = ?"
-                    users-by-username-query="SELECT username, password, enabled FROM users WHERE username = ?" />
+        <!--        <security:authentication-provider>
+                    <security:password-encoder ref="encoder" />
+                    <security:jdbc-user-service
+                            data-source-ref="dataSource"
+                            authorities-by-username-query="SELECT username, authority FROM authorities WHERE username = ?"
+                            users-by-username-query="SELECT username, password, enabled FROM users WHERE username = ?" />
+                </security:authentication-provider>-->
+
+        <security:authentication-provider user-service-ref="customUserDetailsService">
+            <security:password-encoder ref="encoder"/>
         </security:authentication-provider>
+
     </security:authentication-manager>
 
-    <webflow-config:flow-executor id="flowExecutor" flow-registry="flowRegistry" />
-    
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="messages"></property>
+        <property name="defaultEncoding" value="UTF-8"></property>
+    </bean>
+
+
+    <webflow-config:flow-executor id="flowExecutor" flow-registry="flowRegistry"/>
+
     <webflow-config:flow-registry id="flowRegistry" base-path="/WEB-INF/flows">
-        <webflow-config:flow-location path="/checkout/checkout-flow.xml" id="checkout" />
+        <webflow-config:flow-location path="/checkout/checkout-flow.xml" id="checkout"/>
     </webflow-config:flow-registry>
 
     <bean id="flowHandlerMapping" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
-        <property name="flowRegistry" ref="flowRegistry" />
+        <property name="flowRegistry" ref="flowRegistry"/>
     </bean>
 
     <bean id="flowHandlerAdapter" class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
-        <property name="flowExecutor" ref="flowExecutor" />
+        <property name="flowExecutor" ref="flowExecutor"/>
     </bean>
 
     <bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
-        <constructor-arg name="strength" value="11" />
+        <constructor-arg name="strength" value="11"/>
     </bean>
 
 
