@@ -44,6 +44,7 @@
     <security:http auto-config="true" access-denied-page="/Access_Denied">
         <security:intercept-url pattern="/admin/**" access="ROLE_ADMIN"/>
         <security:intercept-url pattern="/customer/**" access="ROLE_USER"/>
+        <security:intercept-url pattern="/**" access="ROLE_GUEST"/>
         <security:form-login
                 login-page="/login"
                 default-target-url="/home"
@@ -51,23 +52,14 @@
                 username-parameter="username"
                 password-parameter="password"/>
         <security:logout logout-success-url="/login?logout" delete-cookies="JSESSIONID"/>
-
+        <security:anonymous username="guest" granted-authority="ROLE_GUEST"/>
         <security:remember-me key="remember-me" services-ref="rememberMeServices"/>
     </security:http>
 
     <security:authentication-manager>
-        <!--        <security:authentication-provider>
-                    <security:password-encoder ref="encoder" />
-                    <security:jdbc-user-service
-                            data-source-ref="dataSource"
-                            authorities-by-username-query="SELECT username, authority FROM authorities WHERE username = ?"
-                            users-by-username-query="SELECT username, password, enabled FROM users WHERE username = ?" />
-                </security:authentication-provider>-->
-
         <security:authentication-provider user-service-ref="customUserDetailsService">
             <security:password-encoder ref="encoder"/>
         </security:authentication-provider>
-
     </security:authentication-manager>
 
     <bean id="messageSource"
@@ -104,6 +96,24 @@
         <property name="cookieName" value="remember-me"/>
         <property name="tokenLength" value="32"/>
         <property name="parameter" value="remember-me"/>
+    </bean>
+
+
+    <bean id="anonymousAuthFilter"
+          class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+        <property name="key" value="foobar"/>
+        <property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS"/>
+    </bean>
+
+    <bean id="anonymousAuthenticationProvider"
+          class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
+        <property name="key" value="foobar"/>
+    </bean>
+
+
+    <bean id="authenticationTrustResolver"
+                class="org.springframework.security.authentication.AuthenticationTrustResolverImpl">
+        <property name="anonymousClass" value="org.springframework.security.authentication.AnonymousAuthenticationToken"/>
     </bean>
 
 </beans>

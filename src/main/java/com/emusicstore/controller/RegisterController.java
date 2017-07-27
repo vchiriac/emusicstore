@@ -1,6 +1,7 @@
 package com.emusicstore.controller;
 
 
+import com.emusicstore.enums.RoleEnum;
 import com.emusicstore.model.BillingAddress;
 import com.emusicstore.model.Customer;
 import com.emusicstore.model.ShippingAddress;
@@ -23,7 +24,7 @@ public class RegisterController {
     private CustomerService customerService;
 
     @RequestMapping("/register")
-    public String registerCustomer(Model model){
+    public String registerCustomer(Model model) {
         Customer customer = new Customer();
         BillingAddress billingAddress = new BillingAddress();
         ShippingAddress shippingAddress = new ShippingAddress();
@@ -37,22 +38,22 @@ public class RegisterController {
 
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerCustomerPost(@Valid @ModelAttribute("customer") Customer customer, BindingResult result, Model model){
+    public String registerCustomerPost(@Valid @ModelAttribute("customer") Customer customer, BindingResult result, Model model) {
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return "registerCustomer";
         }
 
         List<Customer> customerList = customerService.getAllCustomers();
 
-        for (int i=0; i< customerList.size(); i++){
-            if(customer.getCustomerEmail().equals(customerList.get(i).getCustomerEmail())){
+        for (int i = 0; i < customerList.size(); i++) {
+            if (customer.getCustomerEmail().equals(customerList.get(i).getCustomerEmail())) {
                 model.addAttribute("emailMsg", "Email already exists");
 
                 return "registerCustomer";
             }
 
-            if(customer.getUsername().equals(customerList.get(i).getUsername())){
+            if (customer.getUsername().equals(customerList.get(i).getUsername())) {
                 model.addAttribute("usernameMsg", "Username already exists");
 
                 return "registerCustomer";
@@ -60,8 +61,8 @@ public class RegisterController {
         }
 
         customer.setEnabled(true);
-        customerService.addCustomer(customer);
+        customerService.addCustomer(customer, RoleEnum.ROLE_USER);
         return "registerCustomerSuccess";
     }
 
-} // The End of Class;
+}

@@ -2,6 +2,7 @@ package com.emusicstore.dao.impl;
 
 import com.emusicstore.dao.CustomerDao;
 import com.emusicstore.dao.RoleDao;
+import com.emusicstore.enums.RoleEnum;
 import com.emusicstore.model.*;
 import com.emusicstore.service.RoleService;
 import org.hibernate.Query;
@@ -32,7 +33,7 @@ public class CustomerDaoImpl implements CustomerDao {
     @Autowired
     private RoleDao roleDao;
 
-    public void addCustomer(Customer customer) {
+    public void addCustomer(Customer customer, RoleEnum roleEnum) {
         Session session = sessionFactory.getCurrentSession();
 
         customer.getBillingAddress().setCustomer(customer);
@@ -52,9 +53,9 @@ public class CustomerDaoImpl implements CustomerDao {
 
         Authorities newAuthorities = new Authorities();
         newAuthorities.setUsername(customer.getUsername());
-        newAuthorities.setAuthority(ROLE_USER);
+        newAuthorities.setAuthority(roleEnum.name());
 
-        Role newRole = roleDao.findByName(ROLE_USER); //new Role();
+        Role newRole = roleDao.findByName(roleEnum.name());
 
         newRole.getUsers().add(newUser);
         newUser.getRoles().add(newRole);

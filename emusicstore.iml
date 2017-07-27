@@ -29,6 +29,7 @@
         <setting name="provider-name" value="" />
         <datasource-mapping>
           <factory-entry name="emusicstore-unit" />
+          <factory-entry name="entityManagerFactoryBean" value="dataSource" />
         </datasource-mapping>
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/persistence.xml" />
       </configuration>

@@ -12,6 +12,10 @@
 
     <title>My Music Store</title>
 
+    <script type="text/javascript">
+        var contextPath = "${pageContext.request.contextPath}";
+    </script>
+
     <!-- Angular.JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
 
