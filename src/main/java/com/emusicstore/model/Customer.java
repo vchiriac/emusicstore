@@ -41,7 +41,7 @@ public class Customer implements Serializable{
     @JoinColumn(name = "shippingAddressId")
     private ShippingAddress shippingAddress;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "cartId")
     @JsonIgnore
     private Cart cart;

@@ -16,4 +16,8 @@ public interface CustomerService {
 
     Customer getCustomerByUsername(String username);
 
+    List<Customer> getAllTemporaryCustomers();
+
+    void deleteCustomer(int customerId, RoleEnum roleEnum);
+
 }

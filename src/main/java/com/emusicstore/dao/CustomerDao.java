@@ -15,4 +15,8 @@ public interface CustomerDao {
     List<Customer> getAllCustomers();
 
     Customer getCustomerByUsername(String username);
+
+    List<Customer> getAllTemporaryCustomers();
+
+    void deleteCustomer(int customerId, RoleEnum roleEnum);
 }

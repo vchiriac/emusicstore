@@ -23,7 +23,7 @@ public class ShippingAddress implements Serializable{
     private String country;
     private String zipCode;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     private Customer customer;
 
     public int getShippingAddressId() {

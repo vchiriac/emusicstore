@@ -20,13 +20,13 @@ public class RoleDaoImpl extends AbstractDao<Integer, Role> implements RoleDao {
     static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
 
     @PersistenceContext
-    private EntityManager manager;
+    private EntityManager entityManager;
 
     @Override
     public Role findByName(String name) {
         logger.info("name : {}", name);
         Role role = null;
-        Query query = manager.createQuery("select r from Role r where r.name = :name");
+        Query query = entityManager.createQuery("select r from Role r where r.name = :name");
         query.setParameter("name", name);
         if (query.getResultList().size() > 0) {
             role = (Role) query.getSingleResult();
@@ -38,7 +38,7 @@ public class RoleDaoImpl extends AbstractDao<Integer, Role> implements RoleDao {
 
     @Override
     public List<Role> findAll() {
-        Query query = manager.createQuery("select r from Role r");
+        Query query = entityManager.createQuery("select r from Role r");
 
         if (query.getResultList().size() > 0) {
             return query.getResultList();

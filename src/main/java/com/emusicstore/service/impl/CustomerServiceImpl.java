@@ -11,26 +11,39 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CustomerServiceImpl implements CustomerService{
+public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerDao customerDao;
 
+    @Override
     public void addCustomer(Customer customer, RoleEnum roleEnum) {
         customerDao.addCustomer(customer, roleEnum);
     }
 
-    public Customer getCustomerById(int customerId){
+    @Override
+    public Customer getCustomerById(int customerId) {
         return customerDao.getCustomerById(customerId);
     }
 
-    public List<Customer> getAllCustomers(){
+    @Override
+    public List<Customer> getAllCustomers() {
         return customerDao.getAllCustomers();
     }
 
-    public Customer getCustomerByUsername (String username){
+    @Override
+    public Customer getCustomerByUsername(String username) {
         return customerDao.getCustomerByUsername(username);
     }
 
+    @Override
+    public List<Customer> getAllTemporaryCustomers() {
+        return customerDao.getAllTemporaryCustomers();
+    }
 
-} // The End of Class;
+    @Override
+    public void deleteCustomer(int customerId, RoleEnum roleEnum) {
+       customerDao.deleteCustomer(customerId, roleEnum);
+    }
+
+}

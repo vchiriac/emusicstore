@@ -1,9 +1,7 @@
 package com.emusicstore.controller;
 
-import com.emusicstore.model.Cart;
-import com.emusicstore.model.CartItem;
-import com.emusicstore.model.Customer;
-import com.emusicstore.model.Product;
+import com.emusicstore.enums.RoleEnum;
+import com.emusicstore.model.*;
 import com.emusicstore.service.CartItemService;
 import com.emusicstore.service.CartService;
 import com.emusicstore.service.CustomerService;
@@ -12,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -52,11 +53,45 @@ public class CartResources {
     @RequestMapping(value = "/add/{productId}", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void addItem(@PathVariable(value = "productId") int productId, @AuthenticationPrincipal User activeUser) {
+        Customer customer = null;
 
         final String sessionID = RequestContextHolder.currentRequestAttributes().getSessionId();
-        System.out.println(sessionID);
 
-        Customer customer = customerService.getCustomerByUsername(activeUser.getUsername());
+        if(isCurrentAuthenticationAnonymous()) {
+
+            final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String temporaryUser = (String) authentication.getPrincipal();
+            temporaryUser = temporaryUser + sessionID;
+
+            customer = customerService.getCustomerByUsername(temporaryUser);
+            if(customer == null) {
+
+                Collection<? extends GrantedAuthority> grantedAuthorities = authentication.getAuthorities();
+                String role = null;
+
+                for (GrantedAuthority grantedAuthority : grantedAuthorities) {
+                    role = grantedAuthority.getAuthority();
+                }
+
+                RoleEnum roleEnum = RoleEnum.valueOf(role);
+                Customer temporaryCustomer = new Customer();
+                temporaryCustomer.setUsername(temporaryUser);
+                temporaryCustomer.setEnabled(true);
+                temporaryCustomer.setPassword(temporaryUser);
+                temporaryCustomer.setCustomerName(temporaryUser);
+                temporaryCustomer.setCustomerEmail("internal_" + sessionID + "@gmail.com");
+                BillingAddress billingAddress = new BillingAddress();
+                ShippingAddress shippingAddress = new ShippingAddress();
+                temporaryCustomer.setBillingAddress(billingAddress);
+                temporaryCustomer.setShippingAddress(shippingAddress);
+                temporaryCustomer.setCustomerPhone("111111");
+                customerService.addCustomer(temporaryCustomer, roleEnum);
+                customer = customerService.getCustomerByUsername(temporaryUser);
+            }
+        } else {
+            customer = customerService.getCustomerByUsername(activeUser.getUsername());
+        }
+
         Cart cart = customer.getCart();
         Product product = productService.getProductById(productId);
         List<CartItem> cartItems = cart.getCartItems();

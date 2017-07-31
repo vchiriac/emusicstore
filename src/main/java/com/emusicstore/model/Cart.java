@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "cart")
-public class Cart implements Serializable{
+public class Cart implements Serializable {
 
     private static final long serialVersionUID = 3940548625296145582L;
 
@@ -21,7 +21,7 @@ public class Cart implements Serializable{
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CartItem> cartItems;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "customerId")
     @JsonIgnore
     private Customer customer;
