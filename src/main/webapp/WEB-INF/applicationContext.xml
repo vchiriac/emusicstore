@@ -119,7 +119,7 @@
     </bean>
 
     <task:scheduled-tasks scheduler="myScheduler">
-        <task:scheduled ref="temporaryUserRemovalScheduler" method="reportCurrentTime" fixed-delay="60000" />
+        <task:scheduled ref="temporaryUserRemovalScheduler" method="reportCurrentTime" fixed-delay="600000" />
     </task:scheduled-tasks>
 
     <task:scheduler id="myScheduler" pool-size="1"/>
